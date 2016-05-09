@@ -7,7 +7,6 @@ This is a rudimentary Stokes Flow Solver on a collocated grid using the fipy pac
 '''
 
 from fipy import *
-from Tix import Control
 #from fipy.meshes.grid2D import Grid2D
 
 # declaring some parameters
