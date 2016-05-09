@@ -11,9 +11,12 @@ from fipy import *
 
 # declaring some parameters
 
-L=1.0
-N=50
-dL= L/N
+LX=2.0
+LY=1.0
+NX=100
+NY=50
+dX= LX/NX
+dY= LY/NY
 visc = 1
 U = 1
 pressureRelax = 0.8
@@ -25,7 +28,7 @@ else:
     
 # Building of the mesh
 
-mesh = Grid2D(nx=N, ny=N, dx=dL, dy=dL)
+mesh = Grid2D(nx=NX, ny=NY, dx=dX, dy=dY)
 
 #declaring the variables 
 pressure= CellVariable(mesh=mesh, name='pressure')
@@ -59,12 +62,12 @@ xVelocity.constrain(0., mesh.facesRight | mesh.facesLeft | mesh.facesBottom)
 xVelocity.constrain(U,mesh.facesTop)
 yVelocity.constrain(0.,mesh.exteriorFaces)
 X,Y = mesh.faceCenters
-pressureCorrection.constrain(0., mesh.facesLeft & (Y < dL))
+pressureCorrection.constrain(0., mesh.facesLeft & (Y < dY))
 
 #the viewers:
 
 if __name__=='__main__':
-    viewer = Viewer(vars=(pressure,xVelocity,yVelocity,velocity),xmin=0., xmax=1., ymin=0., ymax=1., colorbar=True)
+    viewer = Viewer(vars=(pressure,xVelocity,yVelocity,velocity),xmin=0., xmax=2., ymin=0., ymax=1., colorbar=True)
     
 for sweep in range(sweeps):
     # solving the Stokes equations for the starred values:
@@ -112,4 +115,4 @@ for sweep in range(sweeps):
                                     ', continuity: ', max(abs(rhs)) 
             viewer.plot()
             
-            
+print numerix.allclose(pressure.globalValue[...,-1], 162.790867927)
